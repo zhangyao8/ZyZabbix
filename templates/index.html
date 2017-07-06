@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Zabbix便捷管理平台">
+    <meta name="keywords" content="Zabbix">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>Zabbix管理平台</title>
+    <link rel="stylesheet" type="text/css" href='static/css/bootstrap.min.css' />
+    <link rel="stylesheet" type="text/css" href="static/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="static/css/flat-ui.min.css" />
+
+</head>
+<body>
+    <div id="wrap">
+        <!-- 左侧菜单栏目块 -->
+        <div class="leftMeun" id="leftMeun">
+            <div id="logoDiv">
+                <p id="logoP"><img id="logo" alt="Zabbix管理平台" src="static/images/logo.png"><span>Zabbix管理平台</span></p>
+            </div>
+            <div id="personInfor">
+                <p id="userName">张耀</p>
+                <p><span>744237154@qq.com</span></p>
+                <p><a href="http://www.zyops.com/" target="_blank">张耀的博客</a></p>
+                <p>
+                    <a>退出登录</a>
+                </p>
+            </div>
+            <div class="meun-title">主机管理</div>
+            <div class="meun-item meun-item-active" href="/hostadd/">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>主机添加
+            </div>
+        </div>
+
+        <!-- 右侧具体内容栏目，使用jQuery ajax动态刷新 -->
+        <div id="rightContent"></div>
+
+        <script type="text/javascript" src="static/js/jquery.min.js"></script>
+        <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            $('.meun-item').click(function () {
+                var url = $(this).attr('href');
+                $('#rightContent').load(url);
+            });
+
+            function CheckValid(arg){
+                var flag = true;
+                $(':text').each(function () {
+                    var require = $(this).attr('require');  //进行判断
+                    if (require){
+                        var val = $(this).val();
+                        if(val.length<=0){
+                            flag =false;
+                            var label = $(this).siblings("label")[0].innerText;
+                            alert(label + '不能为空')
+                        }
+                    }
+                 });
+                if (flag){SubmitForm()}
+                return flag;
+            }
+
+
+
+        </script>
+
+    </div>
+</body>
+</html>
