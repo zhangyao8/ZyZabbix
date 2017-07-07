@@ -13,6 +13,7 @@ ZyZabbix
 	  |--settings.py   Django主配置文件
 	  |--urls.py       url规则
 	  |--zabbix_get.py 获取zabbix相关信息
+	  |--pyzabbix.py   调用Zabbix API
 	hostmanager        功能实现app
 	  |--views.py      业务逻辑处理：首页/添加主机
 	statics            静态资源目录
@@ -25,3 +26,8 @@ ZyZabbix
 	  |--index.html    首页
 	manage.py
 ```
+
+# 安装环境
+1. Python3
+2. Django 1.10.4
+3. 第三方模块requests
