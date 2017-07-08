@@ -3,19 +3,6 @@
 import requests
 import json
 
-
-class ZabbixAPIException:
-    """ generic zabbix api exception
-    code list:
-         -32602 - Invalid params (eg already exists)
-         -32500 - no permissions
-    """
-
-    def __init__(self, exception):
-        self.exception = exception
-        print(self.exception)
-
-
 class ZabbixAPI:
     def __init__(self,
                  server='http://localhost/zabbix',
@@ -50,9 +37,9 @@ class ZabbixAPI:
         # request. Clear it before trying.
         try:
             self.auth = self.user.login(user=user, password=password)
-            print(self.auth)
+            return self.auth
         except Exception:
-            ZabbixAPIException('连接异常')
+            return 'login failed'
 
     def confimport(self, confformat='', source='', rules=''):
         """Alias for configuration.import because it clashes with
@@ -75,7 +62,7 @@ class ZabbixAPI:
         }
 
         # 调用api需要加入认证信息，但是登录api和查看api版本（apiinfo.version）不需要加入。
-        if self.auth and method != 'apiinfo.version':
+        if method not in  ['user.login', 'apiinfo.version']:
             request_json['auth'] = self.auth
 
         response = self.session.post(
@@ -89,26 +76,17 @@ class ZabbixAPI:
         response.raise_for_status()
 
         if not len(response.text):
-            raise ZabbixAPIException("Received empty response")
+            response_json={'result', "Received empty response"}
 
         try:
             response_json = json.loads(response.text)
         except ValueError:
-            raise ZabbixAPIException(
-                "Unable to parse json: %s" % response.text
-            )
+            raise "Unable to parse json: %s" % response.text
 
         self.id += 1
 
         if 'error' in response_json:  # some exception
-            if 'data' not in response_json['error']:  # some errors don't contain 'data': workaround for ZBX-9340
-                response_json['error']['data'] = "No data"
-            msg = "Error {code}: {message}, {data}".format(
-                code=response_json['error']['code'],
-                message=response_json['error']['message'],
-                data=response_json['error']['data']
-            )
-            raise ZabbixAPIException(msg, response_json['error']['code'])
+            response_json['result'] = "error"
 
         return response_json
 
@@ -139,4 +117,4 @@ class ZabbixAPIObjectClass:
 
 
 # zapi = ZabbixAPI("http://10.0.0.61/zabbix/")
-# zapi.login('Admin', 'zabbix')
+# a = zapi.login('Admin', 'zabbix')

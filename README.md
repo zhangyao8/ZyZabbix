@@ -4,6 +4,8 @@
 # 设计功能
 1. Zabbix网页默认添加新的主机只能等待网页变绿（能够监控）或变红（不能监控），浪费时间。本产品第一个功能，主动检查是否能够获取客户端主机名，获取不到数据则检查客户端配置文件。
 2. 通过上面的功能获取到主机名，并结合用户填入的其他数据调用Zabbix API添加主机。
+3. 通过web管理本平台和Zabbix后台的会话保持。
+4. 左侧是控制面板，右侧是具体内容，使用ajax动态加载右侧页面，这样提高页面加载速度，像共用的js/css静态资源就不用重复向服务器建立连接。
 
 # 代码结构
 
@@ -14,6 +16,8 @@ ZyZabbix
 	  |--urls.py       url规则
 	  |--zabbix_get.py 获取zabbix相关信息
 	  |--pyzabbix.py   调用Zabbix API
+	  |--zabbix_info.conf   包含Zabbix的账号，密码等信息的配置文件
+	  |--zbconfig.py   操作zabbix_info.conf配置文件
 	hostmanager        功能实现app
 	  |--views.py      业务逻辑处理：首页/添加主机
 	statics            静态资源目录
@@ -24,6 +28,7 @@ ZyZabbix
 	templates          网页模板目录
 	  |--hostadd.html  添加用户网页
 	  |--index.html    首页
+	  |--settings.html Zabbix连接配置页面
 	manage.py
 ```
 
