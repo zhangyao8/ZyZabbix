@@ -26,20 +26,23 @@ def zabbixSettings(request):
         zbconfig.read_info()
         zabbixurl = zbconfig.get_info('zabbix_web')
         zabbixsess = zbconfig.get_info('zabbix_sess')
-        zabbixuser= zbconfig.get_info('zabbix_user')
+        zabbixuser = zbconfig.get_info('zabbix_user')
         zabbixpass = zbconfig.get_info('zabbix_pass')
         zabbixip = zbconfig.get_info('zabbix_server')
         zabbixstatus = 1
-        zapi = pyzabbix.ZabbixAPI(zabbixurl)
+        zapi = pyzabbix.ZabbixAPI(zabbixurl, timeout=1)
         zapi.auth = zabbixsess
         result = zapi.user.get(countOutput=1)
-        if "error" in result:
+        if "error1" in result:
             zabbixsess = zapi.login(zabbixuser, zabbixpass)
-            if zabbixsess == "error":
+            if "error1" in zabbixsess:
                 zabbixstatus = 0
             else:
                 zbconfig.set_info('zabbix_sess', zabbixsess)
                 zbconfig.write_info()
+        elif "error2" in result:
+            zabbixsess = result
+            zabbixstatus = 0
 
         dic = {
             'zabbixurl': zabbixurl,
@@ -58,7 +61,6 @@ def zabbixSettings(request):
             'zabbix_user': request.POST.get('zabbixuser'),
             'zabbix_pass': request.POST.get('zabbixpass'),
             'zabbix_server': request.POST.get('zabbixip'),
-            'zabbix_sess' : request.POST.get('zabbixsess')
         }
 
         for k, v in dic.items():
