@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^$', views.index),
     url(r'^hostadd/', views.hostadd),
     url(r'^zabbixCheck$', views.zabbixCheck),
+    url(r'^addHost$', views.addHost),
     url(r'^settings/', views.zabbixSettings),
 ]

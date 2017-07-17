@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from ZyZabbix import zabbix_get
 from ZyZabbix import zbconfig
-from ZyZabbix import pyzabbix
 
 
 def index(request):
@@ -21,41 +20,30 @@ def zabbixCheck(request):
         return HttpResponse(ret)
 
 
+def addHost(request):
+    if request.method == 'POST':
+        clientip = request.POST.get('clientip')
+        clientport = request.POST.get('clientport')
+        hostname = request.POST.get('hostname')
+        visiblename = request.POST.get('visiblename', None)
+        groups = request.POST.get('groups')
+        templates = request.POST.get('templates')
+        zapi = zbconfig.login_zabbix()['zapi']
+        ret = zapi.host.create(host=hostname,
+                               name=visiblename,
+                               interfaces=[
+                                   {"type": 1, "main": 1, "useip": 1, "ip": clientip, "dns": "", "port": clientport}],
+                               groups=[{"groupid": groups}], templates=[{"templateid": templates}])
+        return HttpResponse(ret)
+
+
 def zabbixSettings(request):
     if request.method == "GET":
-        zbconfig.read_info()
-        zabbixurl = zbconfig.get_info('zabbix_web')
-        zabbixsess = zbconfig.get_info('zabbix_sess')
-        zabbixuser = zbconfig.get_info('zabbix_user')
-        zabbixpass = zbconfig.get_info('zabbix_pass')
-        zabbixip = zbconfig.get_info('zabbix_server')
-        zabbixstatus = 1
-        zapi = pyzabbix.ZabbixAPI(zabbixurl, timeout=1)
-        zapi.auth = zabbixsess
-        result = zapi.user.get(countOutput=1)
-        if "error1" in result:
-            zabbixsess = zapi.login(zabbixuser, zabbixpass)
-            if "error1" in zabbixsess:
-                zabbixstatus = 0
-            else:
-                zbconfig.set_info('zabbix_sess', zabbixsess)
-                zbconfig.write_info()
-        elif "error2" in result:
-            zabbixsess = result
-            zabbixstatus = 0
-
-        dic = {
-            'zabbixurl': zabbixurl,
-            'zabbixuser': zabbixuser,
-            'zabbixpass': zabbixpass,
-            'zabbixip': zabbixip,
-            'zabbixsess': zabbixsess,
-            'zabbixstatus': zabbixstatus,
-        }
-        return render(request, 'settings.html', dic)
+        ret = zbconfig.login_zabbix()
+        return render(request, 'settings.html', ret)
 
     if request.method == "POST":
-        zbconfig.read_info()
+        zbconfig.readInfo()
         dic = {
             'zabbix_web': request.POST.get('zabbixurl'),
             'zabbix_user': request.POST.get('zabbixuser'),
@@ -65,6 +53,6 @@ def zabbixSettings(request):
 
         for k, v in dic.items():
             if v:
-                zbconfig.set_info(k, v)
-        zbconfig.write_info()
+                zbconfig.setInfo(k, v)
+        zbconfig.writeInfo()
         return HttpResponse('success')

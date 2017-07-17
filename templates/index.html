@@ -22,7 +22,6 @@
             </div>
             <div id="personInfor">
                 <p id="userName">张耀</p>
-                <p><span>744237154@qq.com</span></p>
                 <p><a href="http://www.zyops.com/" target="_blank">张耀的博客</a></p>
                 <p>
                     <a>退出登录</a>
@@ -57,7 +56,7 @@
                         var val = $(this).val();
                         if(val.length<=0){
                             flag =false;
-                            var label = $(this).siblings("label")[0].innerText;
+                            var label = $(this).parent().parent().find('label')[0].innerText;
                             alert(label + '不能为空')
                         }
                     }

@@ -79,7 +79,13 @@ class ZabbixAPI:
             self.id += 1
 
             if 'error' in response_json:  # some exception
-                response_json['result'] = "error1:账号或密码有误。"
+                if 'data' not in response_json['error']:  # some errors don't contain 'data': workaround for ZBX-9340
+                    response_json['error']['data'] = "No data"
+                response_json['result'] = "error1 {code}: {message}, {data}".format(
+                    code=response_json['error']['code'],
+                    message=response_json['error']['message'],
+                    data=response_json['error']['data']
+                )
         except Exception:
             response_json['result'] = "error2:连接API接口失败，请检查网页。"
         finally:

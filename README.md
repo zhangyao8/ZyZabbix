@@ -36,3 +36,12 @@ ZyZabbix
 1. Python3
 2. Django 1.10.4
 3. 第三方模块requests
+
+# 产品功能展示
+1. 主机添加页面
+
+![image](https://github.com/zhangyao8/ZyZabbix/statics/images/hostadd.jpg)
+
+2. 配置管理页面
+
+![image](https://github.com/zhangyao8/ZyZabbix/statics/images/settings.jpg)
