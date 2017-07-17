@@ -40,8 +40,8 @@ ZyZabbix
 # 产品功能展示
 1. 主机添加页面
 
-![image](https://github.com/zhangyao8/ZyZabbix/statics/images/hostadd.jpg)
+![image](https://github.com/zhangyao8/ZyZabbix/raw/master/statics/images/hostadd.jpg)
 
 2. 配置管理页面
 
-![image](https://github.com/zhangyao8/ZyZabbix/statics/images/settings.jpg)
+![image](https://github.com/zhangyao8/ZyZabbix/raw/master/statics/images/settings.jpg)
